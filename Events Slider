@@ -1,0 +1,108 @@
+<style>
+.event-slider {
+    overflow: hidden;
+    width: 100%;
+}
+
+.slider {
+    display: flex;
+    transition: transform 0.5s ease;
+}
+
+.slide {
+    min-width: 100%;
+    box-sizing: border-box;
+    padding: 20px;
+}
+
+.event {
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    padding: 15px;
+}
+
+.slider-controls {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.slider-controls button {
+    margin: 0 10px;
+    padding: 10px 20px;
+    cursor: pointer;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+}
+
+.slider-controls button:hover {
+    background-color: #0056b3;
+}
+</style>
+
+<div class="event-slider">
+    <div class="slider" id="eventSlider">
+        <div class="slide">
+            <h2>Upcoming Events</h2>
+            <div class="event">
+                <h3>Technical Workshop: Blockchain Basics</h3>
+                <p>Date: March 15, 2023</p>
+                <p>Description: Explore the fundamentals of blockchain technology and its applications in finance.</p>
+            </div>
+            <div class="event">
+                <h3>Networking Evening</h3>
+                <p>Date: April 20, 2023</p>
+                <p>Description: Join us for an evening of networking with industry leaders and peers.</p>
+            </div>
+            <div class="event">
+                <h3>Hackathon: Fintech Innovations</h3>
+                <p>Date: May 5-6, 2023</p>
+                <p>Description: Collaborate with others to create fintech solutions over a weekend of coding.</p>
+            </div>
+        </div>
+        <div class="slide">
+            <h2>Past Events</h2>
+            <div class="event">
+                <h3>Industry Speaker Session: AI in Finance</h3>
+                <p>Date: January 10, 2023</p>
+                <p>Description: Insights from leaders on the impact of AI in the fintech sector.</p>
+            </div>
+            <div class="event">
+                <h3>Technical Workshop: Data Privacy in Fintech</h3>
+                <p>Date: February 5, 2023</p>
+                <p>Description: Learn about data privacy regulations and practices in the financial sector.</p>
+            </div>
+        </div>
+    </div>
+    <div class="slider-controls">
+        <button onclick="prevSlide()">← Previous</button>
+        <button onclick="nextSlide()">Next →</button>
+    </div>
+</div>
+
+<script>
+let currentSlide = 0;
+const slider = document.getElementById('eventSlider');
+const slides = slider.querySelectorAll('.slide');
+
+function showSlide(n) {
+    if (n >= slides.length) {
+        currentSlide = 0;
+    }
+    if (n < 0) {
+        currentSlide = slides.length - 1;
+    }
+    slider.style.transform = `translateX(-${currentSlide * 100}%)`;
+}
+
+function nextSlide() {
+    currentSlide++;
+    showSlide(currentSlide);
+}
+
+function prevSlide() {
+    currentSlide--;
+    showSlide(currentSlide);
+}
+</script>
