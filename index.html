@@ -542,8 +542,45 @@
         }, { passive: true });
 
         // Initial setup
+                // Find and scroll to the closest upcoming event
+        function scrollToClosestUpcoming() {
+            const now = new Date();
+            let closestEvent = 0;
+            let closestDistance = Infinity;
+
+            events.forEach((event, index) => {
+                const eventDate = new Date(event.date);
+                const distance = Math.abs(eventDate - now);
+                
+                // Prefer future or present events
+                if (eventDate >= now && distance < closestDistance) {
+                    closestDistance = distance;
+                    closestEvent = index;
+                }
+            });
+
+            // If no future events, find the most recent past event
+            if (closestDistance === Infinity) {
+                events.forEach((event, index) => {
+                    const eventDate = new Date(event.date);
+                    const distance = now - eventDate;
+                    if (distance > 0 && distance < closestDistance) {
+                        closestDistance = distance;
+                        closestEvent = index;
+                    }
+                });
+            }
+
+            scrollToEvent(closestEvent);
+        }
+
+        // Initial setup
         renderEvents();
-        updateButtonStates();
+        window.addEventListener('load', () => {
+            scrollToClosestUpcoming();
+            updateButtonStates();
+        });
+
     </script>
 </body>
 </html>
