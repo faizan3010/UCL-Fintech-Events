@@ -542,37 +542,55 @@
         }, { passive: true });
 
         // Initial setup
-                // Find and scroll to the closest upcoming event
+                        // Find and scroll to the closest upcoming event
         function scrollToClosestUpcoming() {
             const now = new Date();
-            let closestEvent = 0;
+            let presentEvent = -1;
+            let futureEvent = -1;
+            let pastEvent = -1;
             let closestDistance = Infinity;
 
+            // Priority 1: Look for present event
+            presentEvent = events.findIndex(event => event.type === 'present');
+
+            // Priority 2: Find closest future event
             events.forEach((event, index) => {
-                const eventDate = new Date(event.date);
-                const distance = Math.abs(eventDate - now);
-                
-                // Prefer future or present events
-                if (eventDate >= now && distance < closestDistance) {
-                    closestDistance = distance;
-                    closestEvent = index;
+                if (event.type === 'future') {
+                    const eventDate = new Date(event.date);
+                    const distance = eventDate - now;
+                    if (distance > 0 && distance < closestDistance) {
+                        closestDistance = distance;
+                        futureEvent = index;
+                    }
                 }
             });
 
-            // If no future events, find the most recent past event
-            if (closestDistance === Infinity) {
-                events.forEach((event, index) => {
+            // Priority 3: Find most recent past event
+            closestDistance = Infinity;
+            events.forEach((event, index) => {
+                if (event.type === 'past') {
                     const eventDate = new Date(event.date);
                     const distance = now - eventDate;
                     if (distance > 0 && distance < closestDistance) {
                         closestDistance = distance;
-                        closestEvent = index;
+                        pastEvent = index;
                     }
-                });
+                }
+            });
+
+            // Apply priority: present > future > past
+            let closestEvent = 0;
+            if (presentEvent !== -1) {
+                closestEvent = presentEvent;
+            } else if (futureEvent !== -1) {
+                closestEvent = futureEvent;
+            } else if (pastEvent !== -1) {
+                closestEvent = pastEvent;
             }
 
             scrollToEvent(closestEvent);
         }
+
 
         // Initial setup
         renderEvents();
